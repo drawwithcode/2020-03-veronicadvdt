@@ -11,6 +11,8 @@ let ampSlider;
 let analyzer;
 let amplitude;
 var sliderCol;
+let myPersonalBubbles = [];
+let buttonBubble;
 
 
 function preload(){
@@ -29,6 +31,11 @@ function preload(){
   song1 = loadSound("./assets/Choose_Love.mp3");
   song2 = loadSound("./assets/Get_me_high.mp3");
   song3 = loadSound("./assets/S&P.mp3");
+
+ // load font
+ font1 = loadFont('assets/FredokaOne.ttf')
+ font2 = loadFont('assets/VT323.ttf')
+
 }
 
 function setup() {
@@ -45,6 +52,18 @@ function setup() {
   image(myImage5, width/5 , height/2);
   image(myImage6, width/5 , height/2);
   image(myImage7, width/5 , height/2);
+
+
+  for (let i = 1; i < 2; i++) {
+    addBubble();
+  }
+
+
+  buttonBubble = createImg("./assets/AddBubble.png");
+  buttonBubble.position(width/2.8, height*9.5/12);
+  buttonBubble.mousePressed(addBubble);
+  buttonBubble.style("width", "200px");
+
 
   // analyser
   analyzer = new p5.Amplitude();
@@ -108,12 +127,19 @@ function setup() {
 
 function draw() {
 
+
+  push();
+  for(let i = 1; i < myPersonalBubbles.length; i++) {
+    myPersonalBubbles[i].run();
+  }
+  pop();
+
 // text1
 push();
  let text1 = "CHOOSE LOVE";
   fill("white");
   textSize(40);
-  textFont("Fredoka One");
+  textFont(font1);
   textAlign(LEFT);
   text(text1, width/2.5, height/2.4);
 pop();
@@ -123,7 +149,7 @@ push();
  let text2 = "GET ME HIGH";
   fill("white");
   textSize(40);
-  textFont("Fredoka One");
+  textFont(font1);
   textAlign(LEFT);
   text(text2, width/2.5, height/1.9);
 pop();
@@ -133,18 +159,18 @@ push();
  let text3 = "S&P";
   fill("white");
   textSize(40);
-  textFont("Fredoka One");
+  textFont(font1);
   textAlign(LEFT);
   text(text3, width/2.5, height/1.57);
 pop();
 
 push();
- let text4 = "WLSM EP";
+ let text4 = "LISTEN TO WLSM EP:";
   fill("white");
-  textSize(90);
-  textFont("Fredoka One");
+  textSize(80);
+  textFont(font1);
   textAlign(LEFT);
-  text(text4, width*1/10, height/5);
+  text(text4, width*1/11, height/5);
 pop();
 
 // volume slider
@@ -165,7 +191,7 @@ pop();
   let textVolume = "VOLUME";
   fill("white");
   textSize(40);
-  textFont("VT323");
+  textFont(font2);
   textAlign(LEFT);
   text(textVolume, width*1/9, height*4.1/5);
   pop();
@@ -176,7 +202,7 @@ pop();
   let textCol = "COLOR";
   fill("white");
   textSize(40);
-  textFont("VT323");
+  textFont(font2);
   textAlign(LEFT);
   text(textCol, width*1/9, height*4.3/5);
   pop();
@@ -229,5 +255,38 @@ function playpause3() {
     song3.loop();
     playbutton3.style("visibility", "hidden");
     pausebutton3.style("visibility", "visible");
+  }
+}
+
+function addBubble(){
+  var myColors = ["#00A3CC", "#E5D325","#81489B", "#63D853", "#EC2355","#E745D9" ]
+  confettiColor = myColors[Math.floor(Math.random() * myColors.length)];
+  const r=random(255), g=random(255), b=random(255);
+  const bubbleColor = color(confettiColor);
+  const aNewBubble = new Bubble(random(1260,1920), random(0,1000), random(2,22), bubbleColor)
+  myPersonalBubbles.push(aNewBubble);
+}
+
+
+class Bubble {
+  constructor(temp_x,temp_y,temp_r,temp_color) {
+    this.x=temp_x;
+    this.y=temp_y;
+    this.r=temp_r;
+    this.color=temp_color;
+  }
+
+  display() {
+    push();
+    noStroke();
+    fill(this.color);
+    ellipse(this.x,this.y,this.r*2);
+    pop();
+  }
+
+
+  run() {
+
+    this.display();
   }
 }
